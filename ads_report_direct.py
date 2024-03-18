@@ -3,12 +3,12 @@ import pandas as pd
 # Загрузка данных из файлов
 direct_cost = pd.read_excel('data/direct_cost.xlsx')
 report_CRM = pd.read_excel('data/report_CRM.xlsx')
-ads_direct = pd.read_csv('data/ads_direct.csv .csv', delimiter=',', encoding='ISO-8859-1', skiprows=2, error_bad_lines=False)
+ads_direct = pd.read_excel('data/ads_direct.csv.xlsx')
 
 # Посмотрим, какие колонки есть в каждом из датафреймов
 print(direct_cost.columns)
 print(report_CRM.columns)
-print(ads_direct.head())
+print(ads_direct.columns)
 
 # Объединение данных
 merged = direct_cost.merge(report_CRM, on='ad_id').merge(ads_direct, on='ad_id')
