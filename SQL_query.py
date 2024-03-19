@@ -1,22 +1,24 @@
 sql
-CREATE VIEW ads_report AS
 SELECT
-    ads_direct.ad_id,
-    ads_direct.title_1,
-    ads_direct.title_2,
-    ads_direct.adv_text,
-    SUM(direct_cost.impressions) as impressions,
-    SUM(direct_cost.clicks) as clicks,
-    SUM(direct_cost.total_cost) as total_cost,
-    SUM(report_CRM.total_sent) as total_sent,
-    SUM(report_CRM.total_agreed) as total_agreed,
-    SUM(report_CRM.total_objections) as total_objections,
-    SUM(report_CRM.total_finished) as total_finished
+    ads.id AS "ad_id (Номер объявления)",
+    ads.title_1 AS "title_1 (Заголовок 1)",
+    ads.title_2 AS "title_2 (Заголовок 2)",
+    ads.text AS "adv_text (Текст объявления)",
+    SUM(costs.impressions) AS "Количество показов (impressions)",
+    SUM(costs.clicks) AS "Количество кликов (clicks)",
+    SUM(costs.cost) AS "Всего расход",
+    SUM(CASE WHEN crm.sent_kp = 'Да' THEN 1 ELSE 0 END) AS "Всего отправлено КП",
+    SUM(CASE WHEN crm.agreement = 'Да' THEN 1 ELSE 0 END) AS "Всего согласований бюджета",
+    SUM(CASE WHEN crm.objections = 'Да' THEN 1 ELSE 0 END) AS "Всего работы с возражениями",
+    SUM(CASE WHEN crm.project_completed = 'Да' THEN 1 ELSE 0 END) AS "Всего проект окончен / полная оплата"
 FROM
-    direct_cost
-    INNER JOIN report_CRM ON direct_cost.ad_id = report_CRM.ad_id
-    INNER JOIN ads_direct ON direct_cost.ad_id = ads_direct.ad_id
+    ads_direct ads
+LEFT JOIN direct_cost costs ON ads.id = costs.ad_id
+LEFT JOIN report_crm crm ON ads.id = crm.utm_content
 WHERE
-    direct_cost.total_cost > 0
+    costs.cost > 0
 GROUP BY
-    ads_direct.ad_id;
+    ads.id,
+    ads.title_1,
+    ads.title_2,
+    ads.text;
