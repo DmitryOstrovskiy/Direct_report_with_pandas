@@ -14,7 +14,7 @@
 
 ### Технологии
 
-- Python 3.10
+- Python 3.9.10
 - Pandas 2.2.1
 - Numpy 1.26.4
 - et-xmlfile 1.1.0
